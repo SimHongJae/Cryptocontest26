@@ -66,6 +66,19 @@ def main():
                     print(f"[z3-runner] {done}/{total} last=({r['a']},{r['b']}) {r['status']}", flush=True)
 
     print(f"[z3-runner] done total={total} out={args.out}")
+    # 업로드
+    try:
+        import urllib.request, urllib.parse
+        with open(args.out) as f:
+            data = f.read()
+        req = urllib.request.Request(
+            "https://dpaste.com/api/v2/",
+            data=urllib.parse.urlencode({"content": data, "syntax": "json", "expiry_days": 7}).encode()
+        )
+        resp = urllib.request.urlopen(req)
+        print(f"[upload] {resp.read().decode().strip()}")
+    except Exception as e:
+        print(f"[upload] failed: {e}")
 
 
 if __name__ == "__main__":
